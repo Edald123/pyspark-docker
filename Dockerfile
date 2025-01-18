@@ -1,28 +1,16 @@
-# Use the official OpenJDK image as the base image
-FROM openjdk:11
+FROM bitnami/spark:3.4.1
 
-# Set environment variables for Spark
-ENV SPARK_VERSION=3.4.1
-ENV HADOOP_VERSION=3
-ENV SPARK_HOME=/opt/spark
-ENV PATH="$SPARK_HOME/bin:$PATH"
+# Switch to root user for setup
+USER root
 
-# Install Python and necessary tools
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip && \
-    apt-get clean
+# Install PySpark dependencies
+RUN pip install py4j pyspark
 
-# Download and install Spark
-RUN curl -L -o /tmp/spark.tgz \
-    "https://archive.apache.org/dist/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION}.tgz" && \
-    mkdir -p /opt && \
-    tar -xzf /tmp/spark.tgz -C /opt && \
-    mv /opt/spark-${SPARK_VERSION}-bin-hadoop${HADOOP_VERSION} $SPARK_HOME && \
-    rm /tmp/spark.tgz
+# Create a named non-root user for UID 1001
+RUN echo "spark:x:1001:1001::/home/spark:/bin/bash" >> /etc/passwd
 
-# Install PySpark
-RUN pip3 install pyspark
+# Switch back to the non-root user
+USER 1001
 
 # Set the working directory
 WORKDIR /app
