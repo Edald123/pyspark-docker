@@ -1,0 +1,22 @@
+services:
+  spark:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spark_container
+    ports:
+      - "4040:4040" # Spark UI port for monitoring
+    volumes:
+      - ./app:/app # Mount the app directory for dynamic updates
+    environment:
+      - SPARK_MODE=standalone # Running Spark in standalone mode
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: "4g"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4040"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
