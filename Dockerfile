@@ -9,6 +9,9 @@ RUN pip install py4j pyspark
 # Create a named non-root user for UID 1001
 RUN echo "spark:x:1001:1001::/home/spark:/bin/bash" >> /etc/passwd
 
+# Ensure proper ownership of the logs directory for the non-root user
+RUN mkdir -p /opt/spark/logs && chown -R 1001:1001 /opt/spark/logs
+
 # Switch back to the non-root user
 USER 1001
 

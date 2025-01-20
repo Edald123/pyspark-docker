@@ -21,7 +21,9 @@ Confirm both workers are registered under "Workers".
 Access the Spark master container:
 ```bash
 sudo docker exec -it spark-master bash
-python3 /app/hello_world.py\
+```
+```bash
+python3 /app/hello_world.py
 ```
 
 ## Inspect Logs:
@@ -30,3 +32,9 @@ List the logs in the spark-logs volume:
 ```bash
 sudo docker volume inspect pyspark-docker_spark-logs
 ```
+
+## Outcome
+Functional multi-node Spark cluster with:
+- 1 master node.
+- 2 worker nodes.
+- Persistent logs and tunable Spark configurations.
